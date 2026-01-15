@@ -1,8 +1,8 @@
 from flask import request, jsonify, session
 from flask_restful import Resource
-from .extensions import db
-from .models import Client, Shot, User
-from .serializers import (
+from extensions import db
+from models import Client, Shot, User
+from serializers import (
     client_schema, clients_schema,
     shot_schema, shots_schema,
     user_schema, users_schema
@@ -67,6 +67,9 @@ class ClientDetail(Resource):
         return {'message': 'Deleted'}, 200
 
 
+import uuid
+import os
+
 class ShotList(Resource):
     """Resource for listing and creating shots."""
 
@@ -83,17 +86,45 @@ class ShotList(Resource):
         }, 200
 
     def post(self):
-        """Create new shot."""
-        try:
-            data = request.get_json()
-            shot = Shot(**data)
-            db.session.add(shot)
-            db.session.commit()
-            return shot_schema.dump(shot), 201
-        except Exception as e:
-            db.session.rollback()
-            return {'error': str(e)}, 400
-
+        """Upload a new shot with image."""
+        # 1. Check if image was included
+        file = request.files.get('image')
+        if not file:
+            return {'error': 'No image provided'}, 400
+        
+        # 2. Validate it's actually an image
+        allowed = ['.jpg', '.jpeg', '.png', '.webp']
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in allowed:
+            return {'error': 'Invalid file type'}, 400
+        
+        # 3. Get form data
+        client_id = request.form.get('client_id', type=int)
+        user_id = request.form.get('user_id', type=int)
+        description = request.form.get('description', '')
+        
+        # 4. Generate filename: clientId_userId_ddmmyyyyhhmmss
+        from datetime import datetime
+        timestamp = datetime.now().strftime('%d%m%Y%H%M%S')
+        filename = f"{client_id}_{user_id}_{timestamp}{ext}"
+        
+        # 5. Save to uploads folder
+        upload_folder = os.path.join(os.path.dirname(__file__), 'uploads')
+        os.makedirs(upload_folder, exist_ok=True)
+        file.save(os.path.join(upload_folder, filename))
+        
+        # 6. Create database record
+        shot = Shot(
+            image_path=filename,
+            client_id=client_id,
+            user_id=user_id,
+            description=description
+        )
+        db.session.add(shot)
+        db.session.commit()
+        
+        return shot_schema.dump(shot), 201
+    
 
 class ShotDetail(Resource):
     """Resource for individual shot operations."""
@@ -121,6 +152,14 @@ class ShotDetail(Resource):
     def delete(self, shot_id):
         """Delete shot."""
         shot = Shot.query.get_or_404(shot_id)
+    
+    # Delete the actual file too
+        try:
+            filepath = os.path.join(os.path.dirname(__file__), 'uploads', shot.image_path)
+            os.remove(filepath)
+        except OSError:
+            pass  # File might already be gone, that's fine
+    
         db.session.delete(shot)
         db.session.commit()
         return {'message': 'Deleted'}, 200

@@ -1,9 +1,9 @@
-from .extensions import ma
-from .models import Client, Shot, User
+from extensions import ma
+from models import Client, Shot, User
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     """Schema for User model."""
-    shots = ma.Nested('ShotSchema', many=True, dump_only=True, only=('id'), exclude=('user',))
+    shots = ma.Nested('ShotSchema', many=True, dump_only=True, only=('id',), exclude=('user',))
 
     class Meta:
         model = User
@@ -14,7 +14,7 @@ users_schema = UserSchema(many=True)
 
 class ClientSchema(ma.SQLAlchemyAutoSchema):
     """Schema for Client model."""
-    shots = ma.Nested('ShotSchema', many=True, dump_only=True, only=('id'), exclude=('client',))
+    shots = ma.Nested('ShotSchema', many=True, dump_only=True, exclude=('client',))
 
     class Meta:
         model = Client
@@ -27,8 +27,8 @@ clients_schema = ClientSchema(many=True)
 
 class ShotSchema(ma.SQLAlchemyAutoSchema):
     """Schema for Shot model."""
-    client = ma.Nested('ClientSchema', only=('id'), exclude=('shots',))
-    user = ma.Nested('UserSchema', only=('id'), exclude=('shots',))
+    client = ma.Nested('ClientSchema', only=('id',), exclude=('shots',))
+    user = ma.Nested('UserSchema', only=('id',), exclude=('shots',))
 
     class Meta:
         model = Shot

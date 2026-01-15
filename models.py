@@ -1,4 +1,4 @@
-from .extensions import db, bcrypt
+from extensions import db, bcrypt
 from datetime import datetime, timezone
 
 
@@ -31,6 +31,13 @@ class Client(db.Model):
     __tablename__ = 'clients'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    address = db.Column(db.String(200), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(100), nullable=False)
+    zip_code = db.Column(db.String(20), nullable=False)
 
     # Relationships
     shots = db.relationship('Shot', back_populates='client', cascade='all, delete-orphan')
@@ -44,7 +51,9 @@ class Shot(db.Model):
     __tablename__ = 'shots'
 
     id = db.Column(db.Integer, primary_key=True)
-
+    image_path = db.Column(db.String(255), nullable=False)
+    date = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    description = db.Column(db.String(500), nullable=True)
     # Foreign Keys
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
