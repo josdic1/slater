@@ -7,19 +7,23 @@ import { SearchInput } from "../components/SearchInput.jsx";
 
 export function ClientDetail() {
   const { clientId } = useParams();
-  const { users, deleteClient } = useAuth();
+  // 1. Get the fetchClient function from context
+  const { users, deleteClient, fetchClient } = useAuth(); 
   const navigate = useNavigate();
   
   const [client, setClient] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   
-  const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5555/api";
+  // REMOVED: const API_URL = ... (We don't need this anymore)
 
   useEffect(() => {
-    fetch(`${API_URL}/clients/${clientId}`)
-      .then(r => r.json())
-      .then(setClient);
-  }, [clientId]);
+    // 2. Use the context function instead of raw fetch
+    const loadData = async () => {
+      const data = await fetchClient(clientId);
+      setClient(data);
+    };
+    loadData();
+  }, [clientId, fetchClient]);
 
   const onDeleteClick = async () => {
     if (window.confirm("Delete this client and all their photos?")) {
@@ -30,13 +34,13 @@ export function ClientDetail() {
 
   if (!client) return <div className="page-container">Loading...</div>;
 
-  const filteredShots = client.shots.filter(shot => {
+  const filteredShots = client.shots?.filter(shot => { // Added ?. safety check
     if (!searchTerm) return true;
     const term = searchTerm.toLowerCase();
     const desc = shot.description ? shot.description.toLowerCase() : "";
     const date = new Date(shot.date).toLocaleDateString().toLowerCase();
     return desc.includes(term) || date.includes(term);
-  });
+  }) || [];
 
   return (
     <div className="page-container">
@@ -53,7 +57,6 @@ export function ClientDetail() {
           + Add New Photo
         </button>
         
-        {/* NEW: Share Button */}
         <ShareButton 
             title={`Photos for ${client.name}`}
             text={`Here are the roof photos for ${client.name} at ${client.address}.`}
@@ -70,10 +73,10 @@ export function ClientDetail() {
 
       <hr style={{border: 'none', borderTop: '1px solid #E5E7EB', margin: '30px 0'}} />
 
-      <h2>Photo History ({client.shots.length})</h2>
+      <h2>Photo History ({client.shots ? client.shots.length : 0})</h2>
 
       {/* Only show search if they actually have photos */}
-      {client.shots.length > 0 && (
+      {client.shots && client.shots.length > 0 && (
         <SearchInput 
           placeholder="🔍 Find photos (e.g. 'roof', 'damage')..."
           value={searchTerm}

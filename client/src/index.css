@@ -162,4 +162,40 @@ input[type="file"] {
   color: var(--color-navy);
   font-weight: 700;
 }
+/* --- Search Bar with Clear Button --- */
+.search-container {
+  position: relative;
+  margin-bottom: 20px;
+}
 
+.search-container input {
+  padding-right: 48px; /* Make room for the X so text doesn't hit it */
+  margin-bottom: 0;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; 
+  height: 40px;
+  background: transparent;
+  border: none;
+  color: #9CA3AF; /* Light grey */
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0; /* Override default button margin */
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.search-clear-btn:hover {
+  color: #DC2626; /* Turn red when hovering to indicate 'remove' */
+  background: transparent;
+  border: none;
+}

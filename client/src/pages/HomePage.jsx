@@ -1,24 +1,46 @@
+import { useState } from "react";
 import { useAuth } from "../hooks/useAuth.jsx";
 import { ClientList } from "../components/ClientList.jsx";
-// Import the new Logo component
 import { Logo } from "../components/Logo.jsx";
+// Import the new component
+import { SearchInput } from "../components/SearchInput.jsx";
 
 export function HomePage() {
     const { loading, clients, users } = useAuth();
+    const [searchTerm, setSearchTerm] = useState("");
 
     if (loading) return <div className="page-container">Loading...</div>;
+
+    const filteredClients = clients.filter(client => {
+      if (!searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      return (
+        client.name.toLowerCase().includes(term) ||
+        client.city.toLowerCase().includes(term) ||
+        client.address.toLowerCase().includes(term)
+      );
+    });
     
     return (
         <div className="page-container">
            <div className="header-section" style={{borderBottom: 'none', paddingBottom: 0}}>
-             
-             {/* Use the new component here */}
              <Logo />
-             
-      
            </div>
+
+           {/* Replaced standard input with SearchInput */}
+           <SearchInput 
+              placeholder="🔍 Search clients by name or city..."
+              value={searchTerm}
+              onChange={setSearchTerm}
+           />
            
-           <ClientList clients={clients} users={users} />
+           {searchTerm && (
+               <p style={{ fontSize: '14px', color: '#666', textAlign: 'center', marginBottom: '16px' }}>
+                 Found {filteredClients.length} result(s)
+               </p>
+           )}
+           
+           <ClientList clients={filteredClients} users={users} />
         </div>
     );
 }

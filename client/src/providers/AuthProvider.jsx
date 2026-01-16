@@ -1,5 +1,6 @@
 import { AuthContext } from "../contexts/AuthContext";
 import { useState, useEffect, use } from "react";
+import { INITIAL_SHOTS } from "../data/data";
 
 export function AuthProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
