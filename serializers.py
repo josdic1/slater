@@ -33,7 +33,7 @@ class ShotSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Shot
         load_instance = True
-        include_fk = False
+        include_fk = True
 
 shot_schema = ShotSchema()
 shots_schema = ShotSchema(many=True)

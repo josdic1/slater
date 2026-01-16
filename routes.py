@@ -12,16 +12,8 @@ class ClientList(Resource):
     """Resource for listing and creating clients."""
 
     def get(self):
-        """Get all clients."""
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 20, type=int)
-        pagination = Client.query.paginate(page=page, per_page=per_page)
-        return {
-            'items': clients_schema.dump(pagination.items),
-            'total': pagination.total,
-            'page': page,
-            'per_page': per_page
-        }, 200
+        clients = Client.query.all()
+        return clients_schema.dump(clients), 200
 
     def post(self):
         """Create new client."""
@@ -74,16 +66,8 @@ class ShotList(Resource):
     """Resource for listing and creating shots."""
 
     def get(self):
-        """Get all shots."""
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 20, type=int)
-        pagination = Shot.query.paginate(page=page, per_page=per_page)
-        return {
-            'items': shots_schema.dump(pagination.items),
-            'total': pagination.total,
-            'page': page,
-            'per_page': per_page
-        }, 200
+        shots = Shot.query.all()
+        return shots_schema.dump(shots), 200
 
     def post(self):
         """Upload a new shot with image."""
@@ -168,17 +152,21 @@ class ShotDetail(Resource):
 class UserList(Resource):
     """Resource for listing and creating users."""
 
+    # def get(self):
+    #     """Get all users."""
+        # page = request.args.get('page', 1, type=int)
+        # per_page = request.args.get('per_page', 20, type=int)
+        # pagination = User.query.paginate(page=page, per_page=per_page)
+        # return {
+        #     'items': users_schema.dump(pagination.items),
+        #     'total': pagination.total,
+        #     'page': page,
+        #     'per_page': per_page
+        # }, 200
+
     def get(self):
-        """Get all users."""
-        page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 20, type=int)
-        pagination = User.query.paginate(page=page, per_page=per_page)
-        return {
-            'items': users_schema.dump(pagination.items),
-            'total': pagination.total,
-            'page': page,
-            'per_page': per_page
-        }, 200
+        users = User.query.all()
+        return users_schema.dump(users), 200
 
     def post(self):
         """Create new user."""
