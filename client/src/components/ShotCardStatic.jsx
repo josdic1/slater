@@ -2,19 +2,13 @@ import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { ShareButton } from "./ShareButton";
 
-export function ShotCard({ shot, users }) {
+export function ShotCardStatic({ shot, users }) {
   const { API_URL, deleteShot } = useAuth();
   const navigate = useNavigate();
 
-  // --- THE FIX IS HERE ---
+  // If path starts with / or http, use as-is. Otherwise prepend uploads path.
   let imageUrl = shot.image_path;
-
-  // Check if it is NOT a full web link (Unsplash) AND NOT a temporary blob (New Upload)
-  const isExternal = imageUrl.startsWith('http') || imageUrl.startsWith('blob:');
-
-  if (!isExternal) {
-    // If it's just a filename (like "roof.jpg"), prep it for the server
-    // We remove '/api' just in case your API_URL includes it
+  if (!imageUrl.startsWith('/') && !imageUrl.startsWith('http') && !imageUrl.startsWith('blob:')) {
     const cleanBase = API_URL ? API_URL.replace('/api', '') : '';
     imageUrl = `${cleanBase}/uploads/${shot.image_path}`;
   }
@@ -32,18 +26,14 @@ export function ShotCard({ shot, users }) {
       if (result.success) navigate('/');
     }
   };
-
+console.log('imageUrl:', imageUrl, 'shot.image_path:', shot.image_path);
   return (
     <div className="card shot-card">
-      <img 
-        className="shot-image"
-        src={imageUrl} 
-        alt={shot.description}
-        onError={(e) => {
-             // Fallback if image fails to load
-             e.target.src = "https://via.placeholder.com/400?text=Image+Not+Found"; 
-        }}
-      />
+    <img 
+  className="shot-image"
+  src={imageUrl} 
+  alt={shot.description}
+/>
       <div className="shot-content">
         <div className="shot-meta">
           {dateStr} • {uploaderName}

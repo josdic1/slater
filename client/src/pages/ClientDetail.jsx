@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { ShotCard } from '../components/ShotCard.jsx';
+import { ShotCardStatic } from '../components/ShotCardStatic.jsx';
 import { ShareButton } from '../components/ShareButton.jsx';
 import { SearchInput } from "../components/SearchInput.jsx";
 
@@ -84,7 +84,7 @@ export function ClientDetail() {
       <div className="shots-grid">
         {filteredShots.length > 0 ? (
             filteredShots.map(shot => (
-                <ShotCard key={shot.id} shot={shot} users={users} />
+                <ShotCardStatic key={shot.id} shot={shot} users={users} />
             ))
         ) : (
             <p style={{textAlign: 'center', color: '#888', padding: '20px'}}>
