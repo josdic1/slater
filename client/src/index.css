@@ -199,3 +199,188 @@ input[type="file"] {
   background: transparent;
   border: none;
 }
+/* ===========================================
+   FLOATING HELP BUTTON & MODAL
+   Matches SlateSnap Design System
+   =========================================== */
+
+/* Floating Action Button */
+.help-fab {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 24px); /* Sits above the nav bar */
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: white;
+  border: none;
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 44, 95, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 999; /* Just below nav */
+  margin: 0;
+  padding: 0;
+}
+
+.help-fab:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 44, 95, 0.4);
+}
+
+.help-fab:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* Modal Overlay */
+.help-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-std);
+  z-index: 1001; /* Above nav bar */
+  animation: helpFadeIn 0.2s ease;
+}
+
+@keyframes helpFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Content */
+.help-modal {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 28px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid var(--color-border);
+  animation: helpSlideUp 0.25s ease;
+}
+
+@keyframes helpSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.help-modal h2 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-navy);
+  padding-right: 40px; /* Room for close button */
+}
+
+/* Close Button */
+.help-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--color-bg);
+  border-radius: var(--radius-btn);
+  font-size: 20px;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  margin: 0;
+  padding: 0;
+}
+
+.help-close:hover {
+  background: var(--color-border);
+  color: var(--color-text-main);
+}
+
+/* Help Sections */
+.help-section {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.help-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.help-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: var(--color-navy);
+}
+
+.help-section p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-text-sub);
+  line-height: 1.5;
+}
+
+.help-section strong {
+  color: var(--color-navy);
+  font-weight: 600;
+}
+
+/* Footer */
+.help-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  font-size: 14px;
+  color: var(--color-text-sub);
+  text-align: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .help-fab {
+    bottom: calc(var(--nav-height) + 16px);
+    right: 16px;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+
+  .help-modal {
+    padding: 24px;
+    margin: 0 8px;
+    max-height: 75vh;
+  }
+
+  .help-modal h2 {
+    font-size: 20px;
+  }
+}
+
+
+
+
+
+
