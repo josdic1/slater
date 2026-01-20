@@ -1,11 +1,11 @@
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { routes } from './routes.jsx'
-import './index.css'
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { routes } from "./routes.jsx";
+import "./index.css";
 
 const router = createBrowserRouter(routes, {
-  basename: '/slater'
-})
+  basename: "/slater",
+});
 
-const root = createRoot(document.getElementById('root'))
-root.render(<RouterProvider router={router} />)
+const root = createRoot(document.getElementById("root"));
+root.render(<RouterProvider router={router} />);
